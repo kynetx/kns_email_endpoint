@@ -1,0 +1,5 @@
+require 'rubygems'
+require 'kns_endpoint'
+require 'kns_email_endpoint/connection'
+require 'kns_email_endpoint/configuration'
+require 'kns_email_endpoint/email_endpoint'
