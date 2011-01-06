@@ -2,9 +2,10 @@ PATH
   remote: .
   specs:
     kns_email_endpoint (0.0.1)
+      dalli (~> 1.0.0)
       kns_endpoint (>= 0.1.9)
       mail (>= 2.2.6.1)
-      tlsmail (>= 0.0.1)
+      work_queue (~> 1.0.0)
 
 GEM
   remote: http://rubygems.org/
@@ -12,6 +13,7 @@ GEM
     activesupport (3.0.3)
     awesome_print (0.3.1)
     configuration (1.2.0)
+    dalli (1.0.0)
     diff-lcs (1.1.2)
     growl (1.0.3)
     guard (0.2.2)
@@ -49,15 +51,16 @@ GEM
       diff-lcs (~> 1.1.2)
     rspec-mocks (2.3.0)
     thor (0.14.6)
-    tlsmail (0.0.1)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
+    work_queue (1.0.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   awesome_print
+  dalli (~> 1.0.0)
   growl
   guard-rspec
   kns_email_endpoint!
@@ -65,4 +68,4 @@ DEPENDENCIES
   mail (>= 2.2.6.1)
   rb-fsevent
   rspec (>= 2.0.0)
-  tlsmail (>= 0.0.1)
+  work_queue (~> 1.0.0)

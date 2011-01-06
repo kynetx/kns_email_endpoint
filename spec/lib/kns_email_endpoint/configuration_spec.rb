@@ -1,39 +1,43 @@
-require 'rubygems'
 require 'lib/kns_email_endpoint'
-require 'ap'
 
-describe KNSEmailEndpoint::Configuration do
+$CONFIG_FILE = File.join(File.dirname(__FILE__), '../..', 'test_config_file.yml') 
 
-  before :all do 
-    @test_config_file = File.join(File.dirname(__FILE__), '../..', 'test_config_file.yml') 
-    ap @test_config_file
+module KNSEmailEndpoint
+  describe Configuration do
+
+    Configuration.load_from_file $CONFIG_FILE
+    let(:c) { Configuration }
+
+    it "should have a storage engine" do
+      c.storage_engine.should_not be_nil
+    end
+
+    describe "loaded" do
+
+      specify { c.work_threads.should eql 5}
+      specify { c.poll_delay.should eql 30}
+      specify { c.logdir.should eql "/tmp/email_endpoint"}
+      specify { c.connections.should_not be_empty }
+      specify { c.storage.should_not be_empty }
+      specify { c.log.class.should == Logger }
+      specify { c.storage_engine.class.should == KNSEmailEndpoint::Storage::MemcacheStorage }
+
+    end
+
+
+    describe "access connections" do
+
+      it 'should return a connection by name' do
+        c["test"]["name"].should eql "test"
+      end
+
+      it "should let me loop through the connections" do
+        c.each_connection do |conn|
+          ["test", "gmail"].should include(conn["name"])
+        end
+
+      end
+    end
+
   end
-  
-  it 'has a valid test yaml config file' do
-    File.exists?(@test_config_file).should == true
-  end
-
-  describe "Initialized Configuration" do
-    before :all do
-      @conf = KNSEmailEndpoint::Configuration.new(@test_config_file)
-    end
-
-    it 'should initialize a valid configuration' do
-      @conf.storage_mode.should == "stateless"
-      @conf.worker_threads.should == 40
-      @conf.poll_delay_seconds.should == 30
-      @conf.connections.class.should == Array
-      @conf.connections.empty?.should_not == true
-    end
-
-    it 'should have a valid log' do
-      @conf.log.class.should == Logger
-    end
-    
-    it 'should create a master log file' do
-      File.exists?("/tmp/email_endpoint/email_endpoint.log").should == true
-    end
-
-  end
-  
 end

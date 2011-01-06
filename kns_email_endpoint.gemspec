@@ -21,10 +21,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency "kns_endpoint", ">= 0.1.9"
   s.add_dependency "mail", ">= 2.2.6.1"
-  s.add_dependency "tlsmail", ">= 0.0.1"
-  
-
-
+  s.add_dependency "dalli", "~> 1.0.0"
+  s.add_dependency "work_queue", "~> 1.0.0"
 
   #activesupport (3.0.0)
 	#daemons (1.1.0)

@@ -1,26 +1,64 @@
 logdir: /tmp/email_endpoint # Set to log directory
-storagemode: stateless #stateless or persistant. if stateless, sqlite is not used.
-workthreads: 40 # Set to number of work threads based on observed performance of Kynetx application. *Warning* incorrectly setting this value to low/high can significantly impact performance of the application
+storage:
+     engine: memcache
+     host: localhost
+     port: 11211
+     ttl: nil # Time to live in seconds, nil = forever
+# Other storage example
+    # engine: file
+    # file_location: # location to store the message state, should be a directory. It will be created if it doesn't exist
+workthreads: 5 # Set to number of work threads based on observed performance of Kynetx application. *Warning* incorrectly setting this value to low/high can significantly impact performance of the application
 polldelayinseconds: 30 # Recommended setting is '30'
 connections:
-    - name: test # Connection name. Should be set to human readable name
-      appid: a123x123 # Appid of Kynetx application called to process email
-      appversion: prod #prod or dev - defaults to prod
+    - name: gmail # Connection name. Should be set to human readable name
+      appid: a18x34 # Appid of Kynetx application called to process email
+      appversion: dev #prod or dev - defaults to prod
       processmode: repeat #repeat or single - defaults to single
       specialgeneral: false #puts this connection into general mode - not for general use.
       args: #optional arguments to publish with each mail recieved event
-          arg1: value1
-          arg2: value2
-      imap:
-          host: imap.example.com #Hostname of the IMAP server (e.g. hostname.domain.tld)
-          username: user # Username for IMAP server
-          password: pass # Password for IMAP server user
+          label: parts
+          #arg2: value2
+      incoming:
+          method: imap # imap or pop3
+          host: imap.gmail.com #Hostname of the IMAP server (e.g. hostname.domain.tld)
+          username: kynetx.endpoint.test@gmail.com # Username for IMAP server
+          password: kynetx3mail # Password for IMAP server user
           mailbox: INBOX # Name of mailbox being watched (e.g. INBOX)
+          port: 993
+          ssl: true
       smtp:
-          host: smtp.example.com # Hostname of SMTP mail server (e.g. hostname.domain.tld)
-          username: user # Username for SMTP. *Note* only needed if SMTP authentication is turned on at SMTP - Check with email provider 
-          password: pass # Password for SMTP user
-          port: 25 # SMTP port number *Note* usually this is set to port 25, but could be any port depending on email provider - Check with email provider
-          from: user@example.com # Username outgoing email should be sent as
-          helo_domain: example.com # Domain name of sending domain *Note* this domain must match the domain of the sender and should be resolvable via DNS (i.e. don't make it up)
-      logfile: user.log # Name of logfile for this connection
+          method: smtp
+          host: smtp.gmail.com # Hostname of SMTP mail server (e.g. hostname.domain.tld)
+          username: kynetx.endpoint.test@gmail.com # Username for SMTP. *Note* only needed if SMTP authentication is turned on at SMTP - Check with email provider 
+          password: kynetx3mail # Password for SMTP user
+          port: 587 # SMTP port number *Note* usually this is set to port 25, but could be any port depending on email provider - Check with email provider
+          helo_domain: cpe.cableone.net # Domain name of sending domain *Note* this domain must match the domain of the sender and should be resolvable via DNS (i.e. don't make it up)
+          authentication: plain # can be login, plain, cram_md5, or it can be commented out if server doesn't require auth
+          tls: true
+      logfile: gmail.log # Name of logfile for this connection
+    - name: test 
+      appid: a18x34 
+      appversion: dev 
+      processmode: repeat 
+      max_retry_count: 3
+      args: 
+          label: delete_me
+          #arg2: value2
+      incoming:
+          method: test
+          host: localhost
+          username: doesntmatter
+          password: doesntmatter
+          mailbox: INBOX
+          port: 0 
+          ssl: true
+      smtp:
+          method: test
+          host: localhost
+          username: doesntmatter
+          password: doesntmatter
+          port: 0
+          helo_domain: kynetx.com
+          authentication: plain 
+          tls: true
+      logfile: test.log 

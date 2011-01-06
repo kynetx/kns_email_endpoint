@@ -1,43 +1,43 @@
 Delivered-To: mike.farmer.imap@gmail.com
-Received: by 10.220.185.198 with SMTP id cp6cs28192vcb;
-        Tue, 21 Dec 2010 12:42:31 -0800 (PST)
-Received: from mr.google.com ([10.227.132.208])
-        by 10.227.132.208 with SMTP id c16mr4614286wbt.72.1292964150806 (num_hops = 1);
-        Tue, 21 Dec 2010 12:42:30 -0800 (PST)
-Received: by 10.227.132.208 with SMTP id c16mr3723433wbt.72.1292964150788;
-        Tue, 21 Dec 2010 12:42:30 -0800 (PST)
+Received: by 10.220.178.141 with SMTP id bm13cs253841vcb;
+        Thu, 6 Jan 2011 13:54:52 -0800 (PST)
+Received: from mr.google.com ([10.227.146.149])
+        by 10.227.146.149 with SMTP id h21mr18229971wbv.43.1294350892087 (num_hops = 1);
+        Thu, 06 Jan 2011 13:54:52 -0800 (PST)
+Received: by 10.227.146.149 with SMTP id h21mr14739590wbv.43.1294350892052;
+        Thu, 06 Jan 2011 13:54:52 -0800 (PST)
 X-Forwarded-To: mike.farmer.imap@gmail.com
 X-Forwarded-For: mike.farmer@gmail.com mike.farmer.imap@gmail.com
-Delivered-To: mike.farmer@gmail.com
-Received: by 10.227.133.78 with SMTP id e14cs52018wbt;
-        Tue, 21 Dec 2010 12:42:29 -0800 (PST)
-Received: by 10.42.170.138 with SMTP id f10mr6117971icz.239.1292964148849;
-        Tue, 21 Dec 2010 12:42:28 -0800 (PST)
+Delivered-To: mike.farmer+test@gmail.com
+Received: by 10.227.133.78 with SMTP id e14cs66419wbt;
+        Thu, 6 Jan 2011 13:54:51 -0800 (PST)
+Received: by 10.42.164.135 with SMTP id g7mr80494icy.504.1294350890863;
+        Thu, 06 Jan 2011 13:54:50 -0800 (PST)
 Return-Path: <mjf@kynetx.com>
 Received: from mail.kynetx.com (mail.kynetx.com [209.41.75.70])
-        by mx.google.com with ESMTP id g4si15123885ick.27.2010.12.21.12.42.28;
-        Tue, 21 Dec 2010 12:42:28 -0800 (PST)
+        by mx.google.com with ESMTP id r10si181340ict.24.2011.01.06.13.54.50;
+        Thu, 06 Jan 2011 13:54:50 -0800 (PST)
 Received-SPF: pass (google.com: domain of mjf@kynetx.com designates 209.41.75.70 as permitted sender) client-ip=209.41.75.70;
 Authentication-Results: mx.google.com; spf=pass (google.com: domain of mjf@kynetx.com designates 209.41.75.70 as permitted sender) smtp.mail=mjf@kynetx.com
 Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.kynetx.com (Postfix) with ESMTP id 37BA91D79FB
-	for <mike.farmer@gmail.com>; Tue, 21 Dec 2010 13:42:27 -0700 (MST)
+	by mail.kynetx.com (Postfix) with ESMTP id E67511D7A26;
+	Thu,  6 Jan 2011 14:54:49 -0700 (MST)
 X-Virus-Scanned: amavisd-new at corpserver.kobj.net
 Received: from mail.kynetx.com ([127.0.0.1])
 	by localhost (mail.kynetx.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id s++MTWd2MIqE for <mike.farmer@gmail.com>;
-	Tue, 21 Dec 2010 13:42:27 -0700 (MST)
-Received: from [192.168.1.100] (dsl-209-105-191-70.fairpoint.net [209.105.191.70])
-	by mail.kynetx.com (Postfix) with ESMTPSA id D659C1D79F4
-	for <mike.farmer@gmail.com>; Tue, 21 Dec 2010 13:42:26 -0700 (MST)
+	with ESMTP id KdeiV1dT7FrP; Thu,  6 Jan 2011 14:54:49 -0700 (MST)
+Received: from [192.168.1.133] (24-119-21-78.cpe.cableone.net [24.119.21.78])
+	by mail.kynetx.com (Postfix) with ESMTPSA id 707281D7A23;
+	Thu,  6 Jan 2011 14:54:47 -0700 (MST)
 From: Michael Farmer <mjf@kynetx.com>
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Subject: TESTING EMAIL MESSAGE
-Date: Tue, 21 Dec 2010 13:42:25 -0700
-Message-Id: <E166771F-E1F8-48B3-861E-2D5197FB7EDD@kynetx.com>
-To: Michael Farmer <mike.farmer@gmail.com>
+Subject: Please ignore this
+Date: Thu, 6 Jan 2011 14:54:45 -0700
+Message-Id: <76B78C79-F47D-4083-974B-6823F1CB86F4@kynetx.com>
+To: Sara Farmer <sarafarmer@gmail.com>,
+ mike.farmer+test@gmail.com
 Mime-Version: 1.0 (Apple Message framework v1082)
 X-Mailer: Apple Mail (2.1082)
 
-TESTING 123
+Just testing out my email endpoint. Just ignore this please :)

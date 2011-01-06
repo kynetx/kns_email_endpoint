@@ -1,0 +1,116 @@
+require 'work_queue'
+module KNSEmailEndpoint
+
+  class ProcessEmail
+    # if in repeat mode, these states will be processed
+    $REPEATABLE_STATES = [:forwarded, :replied, :unprocessed, :error]
+    # if in single mode, these states will be processed
+    $SINGLE_STATES = [:unprocessed, :error] 
+
+    class << self
+
+      def go(conn)
+        raise "Need config" unless Configuration[conn.name]
+        log = conn.conn_log
+        log.info "Processing Email from connection: #{conn.name}"
+        endpoint_opts = {
+          :ruleset => conn.appid,
+          :environment => conn.environment,
+          :use_session => true,
+          :logging => log.level == Logger::DEBUG ? true : false
+        }
+
+        begin
+          queue = WorkQueue.new(Configuration.work_threads)
+          conn.retriever.find({
+            :count => :all,
+            :delete_after_find => true,
+            :what => :first,
+            :order => :asc
+          }) do |msg|
+            # worker enqueue
+            queue.enqueue_b {
+              begin
+                msg_state = MessageState.new(conn.name, msg)
+                log.debug "Processing Message #{msg_state.unique_id}"
+                log.debug "STATE: #{msg_state.state}"
+                if (conn.process_mode == :single && $SINGLE_STATES.include?(msg_state.state)) ||
+                   (conn.process_mode == :repeat && $REPEATABLE_STATES.include?(msg_state.state))
+
+                  ee = EmailEndpoint.new(conn.name, endpoint_opts, conn.sender)
+                  event_args = {
+                    :msg => msg,
+                    :unique_id => msg_state.unique_id
+                  }.merge! conn.event_args
+
+                  log.debug "Raising Event\n #{event_args.inspect}"
+                  result = ee.received(event_args)
+                  if log.level == Logger::DEBUG
+                    log.debug "--- Endpoint Log ---"
+                    log.debug ee.log.join("\n")
+                    log.debug "--------------------"
+                  end
+                  if ee.message_state.state == :processing
+                    # there was no directive returned or endpoint failed.
+                    log.debug "UNEXPECTED DIRECTIVE RECEIVED: \n#{result.inspect}"
+                    raise "No directive matched message (#{msg.message_id})"
+                    
+                  end
+                  log.debug "NEW STATE: " + ee.message_state.state.to_s
+                else
+                  log.debug "Skipping #{msg.message_id} (#{msg_state.state})"
+                end
+
+              rescue => e
+                #ap e.message
+                #ap e.backtrace
+                rc = msg_state.retry
+                if rc >= conn.max_retry_count
+                  msg_state.state = :failed
+                else
+                  msg_state.state = :error
+                end
+                log.error e.message
+                log.error "RETRY COUNT: #{rc}"
+                log.error "NEW STATE: #{msg_state.state}"
+              end
+
+            }
+          end
+          queue.join
+        rescue => e
+          ap e.message
+          ap e.backtrace
+        end
+        
+        
+      end
+
+      def go_async
+        threads = []
+        begin
+          Configuration.each_connection do |conn|
+            threads << Thread.new { go conn }
+          end
+          threads.join
+        rescue => e
+          Configuration.log.error e.message
+        end
+      end
+
+      def go_all
+        begin
+          Configuration.each_connection { |conn| go conn }
+        rescue => e
+          Configuration.log.error e.message
+        end
+      end
+
+      def flush
+        # flush all message states
+        Configuration.storage_engine.delete_all
+      end
+    end
+
+  end
+end
