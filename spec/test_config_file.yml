@@ -16,7 +16,7 @@ connections:
       processmode: repeat #repeat or single - defaults to single
       specialgeneral: false #puts this connection into general mode - not for general use.
       args: #optional arguments to publish with each mail recieved event
-          label: parts
+          test_rule: parts
           #arg2: value2
       incoming:
           method: imap # imap or pop3
@@ -42,7 +42,7 @@ connections:
       processmode: repeat 
       max_retry_count: 3
       args: 
-          label: delete_me
+          test_rule: delete_me
           #arg2: value2
       incoming:
           method: test
