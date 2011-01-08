@@ -1,4 +1,5 @@
 logdir: /tmp/email_endpoint # Set to log directory
+logginglevel: debug # can be: debug, info, warn, error, fatal
 storage:
      engine: memcache
      host: localhost

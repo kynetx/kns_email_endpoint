@@ -12,16 +12,18 @@ module KNSEmailEndpoint
       def go(conn)
         raise "Need config" unless Configuration[conn.name]
         log = conn.conn_log
+        3.times { log.info "" }
         log.info "Processing Email from connection: #{conn.name}"
         endpoint_opts = {
           :ruleset => conn.appid,
           :environment => conn.environment,
           :use_session => true,
-          :logging => log.level == Logger::DEBUG ? true : false
+          :logging => log.debug? 
         }
 
         begin
           queue = WorkQueue.new(Configuration.work_threads)
+          email_processed_count = 0
           conn.retriever.find({
             :count => :all,
             :delete_after_find => true,
@@ -45,7 +47,7 @@ module KNSEmailEndpoint
 
                   log.debug "Raising Event\n #{event_args.inspect}"
                   result = ee.received(event_args)
-                  if log.level == Logger::DEBUG
+                  if log.debug?
                     log.debug "--- Endpoint Log ---"
                     log.debug ee.log.join("\n")
                     log.debug "--------------------"
@@ -60,10 +62,9 @@ module KNSEmailEndpoint
                 else
                   log.debug "Skipping #{msg.message_id} (#{msg_state.state})"
                 end
+                email_processed_count += 1
 
               rescue => e
-                #ap e.message
-                #ap e.backtrace
                 rc = msg_state.retry
                 if rc >= conn.max_retry_count
                   msg_state.state = :failed
@@ -78,9 +79,9 @@ module KNSEmailEndpoint
             }
           end
           queue.join
+          log.info "Number of email processed for connection #{conn.name}: #{email_processed_count}"
         rescue => e
-          ap e.message
-          ap e.backtrace
+          log.error "There was an error processing email for #{conn.name}: #{e.message}"
         end
         
         
@@ -92,7 +93,7 @@ module KNSEmailEndpoint
           Configuration.each_connection do |conn|
             threads << Thread.new { go conn }
           end
-          threads.join
+          threads.each { |t| t.join }
         rescue => e
           Configuration.log.error e.message
         end

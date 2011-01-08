@@ -21,6 +21,7 @@ module KNSEmailEndpoint
       specify { c.storage.should_not be_empty }
       specify { c.log.class.should == Logger }
       specify { c.storage_engine.class.should == KNSEmailEndpoint::Storage::MemcacheStorage }
+      specify { c.log.level.should == 0 }
 
     end
 

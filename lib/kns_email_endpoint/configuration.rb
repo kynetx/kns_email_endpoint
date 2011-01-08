@@ -16,6 +16,7 @@ module KNSEmailEndpoint
         @@logdir = conf["logdir"] if conf["logdir"]
         @@work_threads = conf["workthreads"] if conf["workthreads"]
         @@poll_delay = conf["polldelayinseconds"] if conf["polldelayinseconds"]
+        @@log_level = conf["logginglevel"] if conf["logginglevel"]
         @@connections = conf["connections"] if conf["connections"]
         self.storage = conf["storage"] || {}
       end
@@ -31,10 +32,18 @@ module KNSEmailEndpoint
       end
 
       def log
-        return @@logger if defined? @@logger
+        return @@logger if defined?(@@logger) && ! @logger.nil?
         FileUtils.mkdir_p @@logdir
         log_dest = @@logdir == "" ? STDOUT : File.join(@@logdir, 'email_endpoint.log')
         @@logger = Logger.new(log_dest, "daily")
+        @@logger.level = eval("Logger::#{@@log_level.upcase}") rescue Logger::DEBUG
+        return @@logger
+      end
+
+      def log_level=(l)
+        @@log_level = l
+        @@log = nil
+        return @@log_level
       end
 
       def storage=(opts)

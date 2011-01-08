@@ -25,7 +25,6 @@ module KNSEmailEndpoint
     def before_received
       @message_state = MessageState.new(@conn, params[:msg])
       @message_state.state = :processing
-      @status = @message_state.state
     end
 
     directive :delete 

@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'ap'
 
 # require some extensions
 require 'kns_email_endpoint/core_extensions/class'

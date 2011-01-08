@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    kns_email_endpoint (0.0.1)
+    kns_email_endpoint (0.1.0)
       dalli (~> 1.0.0)
       kns_endpoint (>= 0.1.9)
       mail (>= 2.2.6.1)

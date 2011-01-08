@@ -13,6 +13,7 @@ module KNSEmailEndpoint
       @config = Configuration
       @conn_config = @config[name]
       @conn_log = Logger.new("#{@config.logdir}/#{@conn_config['logfile']}", "daily")
+      @conn_log.level = @config.log.level
       @name = @conn_config["name"]
       @process_mode = @conn_config["processmode"].to_sym
       @max_retry_count = @conn_config["max_retry_count"] || 10
