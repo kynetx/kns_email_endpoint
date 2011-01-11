@@ -33,8 +33,12 @@ module KNSEmailEndpoint
 
       def log
         return @@logger if defined?(@@logger) && ! @logger.nil?
-        FileUtils.mkdir_p @@logdir
-        log_dest = @@logdir == "" ? STDOUT : File.join(@@logdir, 'email_endpoint.log')
+        if @@logdir && ! @@logdir.empty?
+          FileUtils.mkdir_p @@logdir unless @@logdir == "" || @@logdir.nil?
+          log_dest = File.join(@@logdir, 'email_endpoint.log')
+        else
+          log_dest = STDOUT
+        end
         @@logger = Logger.new(log_dest, "daily")
         @@logger.level = eval("Logger::#{@@log_level.upcase}") rescue Logger::DEBUG
         return @@logger
@@ -71,7 +75,7 @@ module KNSEmailEndpoint
 
       def each_connection
         @@connections.each do |conn|
-          yield self[conn["name"]]
+          yield Connection.new conn["name"]
         end
       end
 

@@ -60,5 +60,10 @@ module KNSEmailEndpoint
       @message_state.retry_count.should eql 0
     end
 
+    it "should allow me to delete the message" do
+      @message_state.delete
+      @message_state.state.should == :deleted
+    end
+
   end
 end

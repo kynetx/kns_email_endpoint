@@ -12,7 +12,7 @@ module KNSEmailEndpoint
       def go(conn)
         raise "Need config" unless Configuration[conn.name]
         log = conn.conn_log
-        3.times { log.info "" }
+        3.times { log.debug "" }
         log.info "Processing Email from connection: #{conn.name}"
         endpoint_opts = {
           :ruleset => conn.appid,
@@ -24,6 +24,7 @@ module KNSEmailEndpoint
         begin
           queue = WorkQueue.new(Configuration.work_threads)
           email_processed_count = 0
+          email_errors_count = 0
           conn.retriever.find({
             :count => :all,
             :delete_after_find => true,
@@ -59,14 +60,16 @@ module KNSEmailEndpoint
                     
                   end
                   log.debug "NEW STATE: " + ee.message_state.state.to_s
+                  log.debug "Delete message? #{msg.is_marked_for_delete?}"
                 else
                   log.debug "Skipping #{msg.message_id} (#{msg_state.state})"
+                  log.debug "Delete message? #{msg.is_marked_for_delete?}"
                 end
                 email_processed_count += 1
 
               rescue => e
                 rc = msg_state.retry
-                if rc >= conn.max_retry_count
+                if rc >= (conn.max_retry_count - 1)
                   msg_state.state = :failed
                 else
                   msg_state.state = :error
@@ -74,12 +77,15 @@ module KNSEmailEndpoint
                 log.error e.message
                 log.error "RETRY COUNT: #{rc}"
                 log.error "NEW STATE: #{msg_state.state}"
+                log.error "Delete message? #{msg.is_marked_for_delete?}"
+                email_errors_count += 1
               end
 
             }
+            queue.join
           end
-          queue.join
-          log.info "Number of email processed for connection #{conn.name}: #{email_processed_count}"
+          log.info "Number of email successfully processed for connection #{conn.name}: #{email_processed_count}"
+          log.info "Number of email unsuccesfully processed for connection #{conn.name}: #{email_errors_count}"
         rescue => e
           log.error "There was an error processing email for #{conn.name}: #{e.message}"
         end

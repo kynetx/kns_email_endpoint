@@ -12,7 +12,14 @@ module KNSEmailEndpoint
     def setup_mail_connections(name)
       @config = Configuration
       @conn_config = @config[name]
-      @conn_log = Logger.new("#{@config.logdir}/#{@conn_config['logfile']}", "daily")
+      
+      if @config.logdir.empty?
+        log_dest = STDOUT
+      else
+        log_dest = "#{@config.logdir}/#{@conn_config['logfile']}"
+      end
+      @config.log.info "Initializing connection log to: #{log_dest}"
+      @conn_log = Logger.new(log_dest, "daily")
       @conn_log.level = @config.log.level
       @name = @conn_config["name"]
       @process_mode = @conn_config["processmode"].to_sym
@@ -35,7 +42,8 @@ module KNSEmailEndpoint
         :user_name => @conn_config["incoming"]["username"],
         :password => @conn_config["incoming"]["password"],
         :enable_ssl => @conn_config["incoming"]["ssl"],
-        :port => @conn_config["incoming"]["port"]
+        :port => @conn_config["incoming"]["port"],
+        :authentication => @conn_config["incoming"]["authentication"] || nil
       }
 
       @mailbox = @conn_config["incoming"]["mailbox"]

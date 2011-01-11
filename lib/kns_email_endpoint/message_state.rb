@@ -33,11 +33,15 @@ module KNSEmailEndpoint
       @state = @storage.state
       @retry_count = @storage.retry_count
 
+      # Do not auto delete email. 
+      @message.mark_for_delete = false
+
     end
 
     def state=(s)
       @state = s
-      @storage.state = @state
+      @storage.state = @state if @storage.unique_id
+      @message.mark_for_delete = @state == :deleted
       return @state
     end
 
@@ -62,11 +66,7 @@ module KNSEmailEndpoint
 
     def delete
       @storage.delete
-      @message.mark_for_delete = true
-      @unique_id = nil
-      @message_id = nil
-      @state = :deleted
-      @retry_count = nil
+      self.state = :deleted
     end
 
 

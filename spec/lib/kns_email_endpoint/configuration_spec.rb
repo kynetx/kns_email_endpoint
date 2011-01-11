@@ -34,7 +34,7 @@ module KNSEmailEndpoint
 
       it "should let me loop through the connections" do
         c.each_connection do |conn|
-          ["test", "gmail"].should include(conn["name"])
+          ["test", "gmail"].should include(conn.name)
         end
 
       end

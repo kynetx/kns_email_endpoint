@@ -1,4 +1,5 @@
 # Adding methods to imap for easier access to things we do commonly
+require 'mail'
 
 module Mail
 
@@ -27,6 +28,8 @@ module Mail
       end
       
     end
+
+        
 
   end
 

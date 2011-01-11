@@ -4,7 +4,7 @@ require 'rubygems'
 require 'kns_email_endpoint/core_extensions/class'
 require 'kns_email_endpoint/core_extensions/hash'
 require 'kns_email_endpoint/core_extensions/imap'
-require 'lib/kns_email_endpoint/core_extensions/message'
+require 'kns_email_endpoint/core_extensions/message'
 require 'kns_email_endpoint/core_extensions/test_retriever'
 
 # all the gem pieces
