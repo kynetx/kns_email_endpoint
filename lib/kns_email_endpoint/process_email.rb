@@ -34,6 +34,7 @@ module KNSEmailEndpoint
             # worker enqueue
             queue.enqueue_b {
               begin
+                log.debug "Getting Message State for #{msg.message_id}"
                 msg_state = MessageState.new(conn.name, msg)
                 log.debug "Processing Message #{msg_state.unique_id}"
                 log.debug "STATE: #{msg_state.state}"
