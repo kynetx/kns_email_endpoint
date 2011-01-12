@@ -69,6 +69,8 @@ module KNSEmailEndpoint
                 email_processed_count += 1
 
               rescue => e
+                log.error "Error processing email: #{e.message}"
+                log.error e.backtrace.join("\n")
                 rc = msg_state.retry
                 if rc >= (conn.max_retry_count - 1)
                   msg_state.state = :failed
