@@ -31,6 +31,8 @@ module KNSEmailEndpoint
             :what => :first,
             :order => :asc
           }) do |msg|
+            # Ensure messages don't accidentally get deleted.
+            msg.marked_for_delete = false
             # worker enqueue
             queue.enqueue_b {
               begin
