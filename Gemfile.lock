@@ -38,7 +38,7 @@ GEM
     open_gem (1.4.2)
       launchy (~> 0.3.5)
     polyglot (0.3.1)
-    rake (0.8.7)
+    rake (13.0.1)
     rb-fsevent (0.3.9)
     rest-client (1.6.1)
       mime-types (>= 1.16)
@@ -60,12 +60,8 @@ PLATFORMS
 
 DEPENDENCIES
   awesome_print
-  dalli (~> 1.0.0)
   growl
   guard-rspec
   kns_email_endpoint!
-  kns_endpoint (>= 0.1.9)
-  mail (>= 2.2.6.1)
   rb-fsevent
   rspec (>= 2.0.0)
-  work_queue (~> 1.0.0)
